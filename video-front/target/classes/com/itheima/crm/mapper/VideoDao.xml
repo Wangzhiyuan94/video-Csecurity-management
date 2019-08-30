@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.itheima.crm.mapper.VideoDao">
+
+<!-- 		public User queryByNameAndPwd(String name,String pwd);
+	
+	 -->
+	
+	<select id="queryByNameAndPwd"  resultType="User">
+		select * from user
+		where 
+		name = #{name} and password = #{pwd}	
+	</select>
+	<!-- public List<Video> getAllVideo(); -->
+	<select id="getAllVideo" resultType="Video">
+		select * from videos
+	</select>
+	
+	<!-- public void uploadvideo(Video video);  -->
+	<insert id="uploadvideo" parameterType="Video">
+		insert into videos
+		(videoName,path,description,goodCount,upLoadTime,uid,types,picPath)
+		values(#{videoName},#{path},#{description},#{goodCount},#{upLoadTime},#{uid},#{types},#{picPath})
+	</insert>
+	
+	<!-- public void updateGoodCount(String id, String count);  -->
+	<update id="updateGoodCount" parameterType="String">
+		update videos
+		set
+		goodCount=goodCount+#{count}
+		where
+		id=#{id}
+	</update>
+</mapper>

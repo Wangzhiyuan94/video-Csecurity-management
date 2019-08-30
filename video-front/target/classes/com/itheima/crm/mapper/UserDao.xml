@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.itheima.crm.mapper.UserDao">
+
+<!-- 		public User queryByNameAndPwd(String name,String pwd);
+	
+	 -->
+	
+	<select id="queryByNameAndPwd"  resultType="User">
+		select * from user
+		where
+		name = #{name} and password = #{pwd}	
+	</select>
+	
+	
+		<!-- public boolean checkUsername(String word)
+		 "select * from user where name = ?"; -->
+		 
+	<select id="checkUsername" parameterType="String" resultType="boolean">
+		select count(name) from user
+		where
+		name = #{name}		
+	</select>	
+	<!-- public void registByNameAndPwd(User user); -->
+	
+	<insert id="registByNameAndPwd" parameterType="User" >
+		 insert into user
+		(Id,name,password)values
+		(#{id},#{name},#{password})
+	</insert>
+	 
+	
+</mapper>

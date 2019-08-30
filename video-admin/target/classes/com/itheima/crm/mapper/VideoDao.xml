@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.itheima.crm.mapper.VideoDao">
+
+<!-- 	//以视频为中心一对一关联用户
+	public List<Video> videoDetails(); -->
+	<resultMap type="Video" id="video">
+		<id column="id" property="id"/>
+		<result column="videoName" property="videoName"/>
+		<result column="goodCount" property="goodCount"/>
+		<result column="upLoadTime" property="upLoadTime"/>
+		<result column="types" property="types"/>
+		<result column="path" property="path"/>
+		<result column="description" property="description"/>
+		<result column="picPath" property="picPath"/>
+		<result column="video_Status" property="video_Status"/>
+		
+		<!-- 一对 -->
+		<association property="user" javaType="User">
+			<result column="name" property="name"/>
+			<result column="user_sex" property="user_sex"/>
+			<result column="user_email" property="user_email"/>
+			<result column="user_birthday" property="user_birthday"/>
+			<result column="user_tel" property="user_tel"/>
+		</association>
+	</resultMap>
+	<select id="videoDetails" resultMap="video" >
+		select 
+		v.videoName,
+		v.goodCount,
+		v.upLoadtime,
+		v.Types,
+		v.path,
+		v.description,
+		v.picPath,
+		u.name,
+		u.user_sex,
+		u.user_email,
+		u.user_birthday,
+		u.user_tel 
+		from videos v 
+		left join user u  
+		on v.uid = u.Id
+		where v.id = #{video_id}
+	</select>
+<!-- 	//以视频为中心一对一关联用户
+	public List<Video> selectVideos(); -->
+<!-- 	<resultMap type="Video" id="video">
+		<result column="videoName" property="videoName"/>
+		<result column="goodCount" property="goodCount"/>
+		<result column="upLoadTime" property="upLoadTime"/>
+		<result column="types" property="types"/>
+		<result column="path" property="path"/>
+		<result column="description" property="description"/>
+		<result column="picPath" property="picPath"/>
+		<result column="video_Status" property="video_Status"/>
+		<result column="id" property="id"/>
+		一对
+		<association property="user" javaType="User">
+			<result column="name" property="name"/>
+		</association>
+	</resultMap> -->
+	<select id="selectVideos" resultMap="video" >
+		select
+		v.id, 
+		v.videoName,
+		v.goodCount,
+		v.upLoadtime,
+		v.Types,
+		v.path,
+		v.video_Status,
+		u.name
+	    from videos v 
+	    left join user u  
+	    on v.uid = u.Id
+	</select>
+	
+	
+	
+	
+
+	
+
+
+	<!-- public List<Video> getAllVideo(); -->
+	<select id="getAllVideo" resultType="Video">
+		select * from videos
+	</select>
+	
+	<!-- public void uploadvideo(Video video);  -->
+	<insert id="uploadvideo" parameterType="Video">
+		insert into videos
+		(videoName,path,description,goodCount,upLoadTime,uid,types,picPath)
+		values(#{videoName},#{path},#{description},#{goodCount},#{upLoadTime},#{uid},#{types},#{picPath})
+	</insert>
+	
+	<!-- public void updateGoodCount(String id, String count);  -->
+	<update id="updateGoodCount" parameterType="String">
+		update videos
+		set
+		goodCount=goodCount+#{count}
+		where
+		id=#{id}
+	</update>
+</mapper>

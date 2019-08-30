@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.itheima.crm.mapper.UserDao">
+
+	<resultMap type="User" id="user">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="password" property="password"/>
+		<result column="status" property="status"/>
+		<result column="user_sex" property="user_sex"/>
+		<result column="user_tel" property="user_tel"/>
+		<result column="user_birthday" property="user_birthday"/>
+		<result column="user_email" property="user_email"/>
+		
+		<!-- 一对多-->
+		<collection property="roles" ofType="Role" >
+			<id column="id" property="id"/>
+			<result column="roleName" property="roleName"/>
+			<result column="roleDesc" property="roleDesc"/>
+		</collection>
+		
+	</resultMap>
+	
+	<select id="findByUsername"  resultMap="user">
+		select 
+		user.name,
+		user.password,
+		user.status,
+		user.user_sex,
+		user.user_birthday,
+		user.user_email,
+		role.roleName,
+		role.roleDesc,
+		user_role.id
+		from user
+		left join user_role on user.id = user_role.uid 
+		left join role on user_role.rid = role.id
+		where name = #{username}
+	</select>
+<!--  	<select id="selectRole" parameterType="Map" resultType="Role" >
+		select *
+		from role
+		where uid in
+		(select uid from user_role where rid = #{id})
+	</select>  -->	
+<!-- 		public User queryByNameAndPwd(String name,String pwd);
+	
+	 -->
+	
+	<select id="queryByNameAndPwd"  resultType="User">
+		select * from user
+		where
+		name = #{name} and password = #{pwd}	
+	</select>
+	
+<!-- 	<select id="findByUsername"  resultMap="user">
+		select * from user
+		where
+		name = #{username}
+	</select> -->	
+	
+		<!-- public boolean checkUsername(String word)
+		 "select * from user where name = ?"; -->
+		 
+	<select id="checkUsername" parameterType="String" resultType="boolean">
+		select count(name) from user
+		where
+		name = #{name}		
+	</select>	
+	<!-- public void save(User user); -->
+	
+	<insert id="save" parameterType="User" >
+		 insert into user
+		(id,name,password,status,user_email,user_tel,user_birthday)values
+		(#{id},#{name},#{password},#{status},#{user_email},#{user_tel},#{user_birthday})
+	</insert>
+	
+	<!-- public List<User> findAll(Integer page,Integer size)  -->
+	<select id="findAll" resultType="User">
+		select * from user
+	</select>
+	
+</mapper>
